@@ -6,8 +6,8 @@ set -e
 
 while IFS= read -r RELEASE_VERSION; do
   echo "Checking if image ${IMAGE_REPO}:${RELEASE_VERSION} exists"
-  for RELEASE_VERSION in $EXISTING_VERSIONS; do
-    if [ "$RELEASE_VERSION" == "$RELEASE_VERSION" ]; then
+  for EXISTING_VERSION in $EXISTING_VERSIONS; do
+    if [ "$RELEASE_VERSION" == "$EXISTING_VERSION" ]; then
       echo "Image ${IMAGE_REPO}:${RELEASE_VERSION} already exists, skipping"
       continue 2
     fi
