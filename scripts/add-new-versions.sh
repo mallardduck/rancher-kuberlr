@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 RELEASES=$(gh api graphql -F owner='flavio' -F name='kuberlr' -f query='query($name: String!, $owner: String!) {repository(owner: $owner, name: $name) {releases(first: 100) {nodes { tagName, isPrerelease }} }}' | jq -r '.data.repository.releases.nodes[] | select(.isPrerelease != true) | .tagName' | sort -V)
-# Including v0.4.0 and higher
+# Including v0.4.3 and higher
 INCLUDE_VERSIONS="v0\.[4-9]\.[0-9]+$"
 VERSIONS_FILE="${1:-versions.txt}"
 
