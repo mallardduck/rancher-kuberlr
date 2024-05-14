@@ -15,4 +15,4 @@ while IFS= read -r RELEASE_VERSION; do
 
   echo "Image ${IMAGE_REPO}:${RELEASE_VERSION} does not exist, adding to new versions list"
   echo "${RELEASE_VERSION}" >> new-versions.txt
-done < versions.txt
+done < base/versions.txt
