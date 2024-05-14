@@ -87,7 +87,7 @@ jobs:
             KUBERLR_RELEASE=${{ matrix.version }}
       - name: Get CPU Arch hashes
         run: |
-          docker manifest inspect ${{ env.IMAGE_REPO }}:${{ matrix.version }} | jq --raw-output '.manifests[]
+          docker manifest inspect ${{ env.IMAGE_REPO }}:base-${{ matrix.version }} | jq --raw-output '.manifests[]
             | select(.platform.architecture | IN("amd64", "arm64"))
             | "IMAGE_\(.platform.architecture | ascii_upcase)=\(.digest)"' >> "$GITHUB_ENV"
       - name: Tag CPU Arch Images
