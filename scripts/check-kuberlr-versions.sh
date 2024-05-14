@@ -2,7 +2,7 @@
 set -e
 
 VERSIONS_FILE="${1:-versions.txt}"
-ARCHES="amd64 arm64"
+ARCHES="amd64 arm64 s390x"
 
 while IFS= read -r release; do
     for arch in $ARCHES; do
