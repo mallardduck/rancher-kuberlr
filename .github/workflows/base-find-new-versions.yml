@@ -1,4 +1,4 @@
-name: [kuberlr-base] Check for new versions
+name: (kuberlr-base) Check for new versions
 on:
   workflow_dispatch:
   schedule:
