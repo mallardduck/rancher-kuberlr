@@ -78,7 +78,7 @@ jobs:
         id: build-push
         with:
           context: .
-          file: package/Dockerfile
+          file: base/Dockerfile
           platforms: "linux/amd64,linux/arm64"
           push: true
           tags: ${{ env.IMAGE_REPO }}/base:${{ matrix.version }}
