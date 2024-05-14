@@ -1,5 +1,6 @@
 name: (kuberlr-base) Publish Images
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'main'
