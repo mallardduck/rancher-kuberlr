@@ -81,7 +81,7 @@ jobs:
           file: package/Dockerfile
           platforms: "linux/amd64,linux/arm64"
           push: true
-          tags: ${{ env.IMAGE_REPO }}:base/${{ matrix.version }}
+          tags: ${{ env.IMAGE_REPO }}/base:${{ matrix.version }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             KUBERLR_RELEASE=${{ matrix.version }}
@@ -93,8 +93,8 @@ jobs:
       - name: Tag CPU Arch Images
         run: |
           docker image pull ${{ env.IMAGE_REPO }}@${{ env.IMAGE_AMD64 }}
-          docker tag ${{ env.IMAGE_REPO }}@${{ env.IMAGE_AMD64 }} ${{ env.IMAGE_REPO }}:base/${{ matrix.version }}-amd64
-          docker push ${{ env.IMAGE_REPO }}:base/${{ matrix.version }}-amd64
+          docker tag ${{ env.IMAGE_REPO }}@${{ env.IMAGE_AMD64 }} ${{ env.IMAGE_REPO }}/base:${{ matrix.version }}-amd64
+          docker push ${{ env.IMAGE_REPO }}/base:${{ matrix.version }}-amd64
           docker image pull ${{ env.IMAGE_REPO }}@${{ env.IMAGE_ARM64 }}
-          docker tag ${{ env.IMAGE_REPO }}@${{ env.IMAGE_ARM64 }} ${{ env.IMAGE_REPO }}:base/${{ matrix.version }}-arm64
-          docker push ${{ env.IMAGE_REPO }}:base/${{ matrix.version }}-arm64
+          docker tag ${{ env.IMAGE_REPO }}@${{ env.IMAGE_ARM64 }} ${{ env.IMAGE_REPO }}/base:${{ matrix.version }}-arm64
+          docker push ${{ env.IMAGE_REPO }}/base:${{ matrix.version }}-arm64
