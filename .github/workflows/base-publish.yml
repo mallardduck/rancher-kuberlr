@@ -40,7 +40,7 @@ jobs:
           EXISTING_VERSIONS: ${{ steps.existing-version.outputs.EXISTING_VERSIONS }}
         run: |
           touch new-versions.txt
-          ./scripts/new-versions.sh
+          ./scripts/new-kuberlr-versions.sh
           JSON=$(jq -R . new-versions.txt | jq -sc .)
           NEW_COUNT=$(wc -l new-versions.txt |awk '{print $1}')
           echo "value=${JSON}"
