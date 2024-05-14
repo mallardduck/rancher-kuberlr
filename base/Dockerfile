@@ -14,6 +14,7 @@ RUN useradd -u 1000 -U -m kuberlr
 
 FROM scratch
 COPY --from=build /bin/kuberlr /bin/kuberlr
+RUN ln -s /bin/kuberlr /bin/kubectl
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/group /etc/group
 USER kuberlr
