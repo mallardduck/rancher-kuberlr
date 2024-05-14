@@ -8,7 +8,7 @@ on:
     types: [ submitted ]
 jobs:
   validate-versions:
-    name: "Check kubectl release versions"
+    name: "Check kuberlr release versions"
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code

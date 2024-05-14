@@ -45,7 +45,7 @@ jobs:
           NEW_COUNT=$(wc -l new-versions.txt |awk '{print $1}')
           echo "value=${JSON}"
           echo "value=${JSON}" >> "$GITHUB_OUTPUT"
-          echo "Found ${NEW_COUNT} new kubectl versions to build" >> $GITHUB_STEP_SUMMARY
+          echo "Found ${NEW_COUNT} new kuberlr versions to build" >> $GITHUB_STEP_SUMMARY
   image-build:
     permissions:
       contents: read
@@ -79,7 +79,7 @@ jobs:
         with:
           context: .
           file: base/Dockerfile
-          platforms: "linux/amd64,linux/arm64"
+          platforms: "linux/amd64,linux/arm64,linux/s390x"
           push: true
           tags: ${{ env.IMAGE_REPO }}:base-${{ matrix.version }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -88,13 +88,19 @@ jobs:
       - name: Get CPU Arch hashes
         run: |
           docker manifest inspect ${{ env.IMAGE_REPO }}:base-${{ matrix.version }} | jq --raw-output '.manifests[]
-            | select(.platform.architecture | IN("amd64", "arm64"))
+            | select(.platform.architecture | IN("amd64", "arm64", "s390x"))
             | "IMAGE_\(.platform.architecture | ascii_upcase)=\(.digest)"' >> "$GITHUB_ENV"
       - name: Tag CPU Arch Images
         run: |
+          echo "Re-tagging amd64 images"
           docker image pull ${{ env.IMAGE_REPO }}@${{ env.IMAGE_AMD64 }}
           docker tag ${{ env.IMAGE_REPO }}@${{ env.IMAGE_AMD64 }} ${{ env.IMAGE_REPO }}:base-${{ matrix.version }}-amd64
           docker push ${{ env.IMAGE_REPO }}:base-${{ matrix.version }}-amd64
+          echo "Re-tagging arm64 images"
           docker image pull ${{ env.IMAGE_REPO }}@${{ env.IMAGE_ARM64 }}
           docker tag ${{ env.IMAGE_REPO }}@${{ env.IMAGE_ARM64 }} ${{ env.IMAGE_REPO }}:base-${{ matrix.version }}-arm64
           docker push ${{ env.IMAGE_REPO }}:base-${{ matrix.version }}-arm64
+          echo "Re-tagging s390x images"
+          docker image pull ${{ env.IMAGE_REPO }}@${{ env.IMAGE_S390X }}
+          docker tag ${{ env.IMAGE_REPO }}@${{ env.IMAGE_S390X }} ${{ env.IMAGE_REPO }}:base-${{ matrix.version }}-s390x
+          docker push ${{ env.IMAGE_REPO }}:base-${{ matrix.version }}-s390x
