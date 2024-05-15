@@ -21,3 +21,43 @@ This repo produces:
 - Each minor Rancher release will get a kubler image tag major to match it.
   - This gives us full "Y" and "Z" control on versioning the component to target Rancher minors.
   - E.x. Rancher 2.8.x releases will get varying versions of 1.Y.Z
+
+### Compatability
+
+```mermaid
+
+gantt
+    title kuberlr-base image vs kuberlr iamge
+    todayMarker off
+    dateFormat X
+    axisFormat %S
+    tickInterval 1second
+    section kuberlr image
+        1.Y.Z           :25,28
+        2.Y.Z           :27,30
+    section kuberlr-base image
+        base-v0.4.5     :25,30
+```
+
+```mermaid
+
+gantt
+    title `rancher/rancher` and `rancher-kuberlr`
+    todayMarker off
+    dateFormat X
+    axisFormat %S
+    tickInterval 1second
+    section Rancher
+        2.8.X           :25,28
+        2.9.X           :27,30
+    section kuberlr image
+        1.Y.Z (for Rancher 2.7)   :25,28
+        2.Y.Z (for Rancher 2.8)   :27,30
+    section Kubectl
+        1.25              :24,26
+        1.26              :25,27
+        1.27              :26,28
+        1.28              :27,29
+        1.29              :28,30
+        1.30              :29,31
+```

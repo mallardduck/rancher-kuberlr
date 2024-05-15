@@ -40,19 +40,34 @@ RUN set -fx; versions=($KUBECTL_VERSION_INFO); \
         echo "${KUBE_SUM} ${kubectl_target}" | sha256sum -c -; \
     done
 
-RUN mkdir -p /usr/etc; \
-    touch /usr/etc/kuberlr.conf; \
-    echo "AllowDownload = false" >> /usr/etc/kuberlr.conf; \
-    echo 'SystemPath = "/usr/bin"' >> /usr/etc/kuberlr.conf; \
-    echo "Timeout = 6" >> /usr/etc/kuberlr.conf;
+FROM registry.suse.com/bci/bci-base:15.5 as final
+RUN zypper -n update && \
+    zypper -n install bash-completion gzip jq tar unzip vim wget && \
+    zypper clean -a && rm -rf /tmp/* /var/tmp/* /usr/share/doc/packages/* /usr/share/doc/manual/* /var/log/*
+RUN echo 'kuberlr:x:1000:1000:kuberlr,,,:/home/kuberlr:/bin/bash' > /etc/passwd && \
+    echo 'kuberlr:x:1000:' > /etc/group && \
+    mkdir /home/kuberlr && \
+    echo '. /etc/profile.d/bash_completion.sh' >> /home/kuberlr/.bashrc && \
+    echo 'alias k="kubectl"' >> /home/kuberlr/.bashrc && \
+    echo 'alias ks="kubectl -n kube-system"' >> /home/kuberlr/.bashrc && \
+    echo 'source <(kuberlr completion bash)' >> /home/kuberlr/.bashrc && \
+    echo 'source <(kubectl completion bash)' >> /home/kuberlr/.bashrc && \
+    echo 'complete -o default -F __start_kubectl k' >> /home/kuberlr/.bashrc && \
+    echo 'LANG=en_US.UTF-8' >> /home/kuberlr/.bashrc && \
+    echo 'PS1="> "' >> /home/kuberlr/.bashrc && \
+    mkdir /home/kuberlr/.kube && \
+    mkdir /home/kuberlr/.kuberlr && \
+    touch /home/kuberlr/.kuberlr/kuberlr.conf && \
+    echo "AllowDownload = false" >> /home/kuberlr/.kuberlr/kuberlr.conf && \
+    echo 'SystemPath = "/usr/bin"' >> /home/kuberlr/.kuberlr/kuberlr.conf && \
+    echo "Timeout = 6" >> /home/kuberlr/.kuberlr/kuberlr.conf && \
+    chown -R kuberlr /home/kuberlr && \
+    chmod 700 /run
 
-FROM scratch
-COPY --from=kuberlr /bin/kubectl /bin/kuberlr
-COPY --from=kuberlr /bin/kubectl /bin/kubectl
-COPY --from=kuberlr /etc/passwd /etc/passwd
-COPY --from=kuberlr /etc/group /etc/group
+
+COPY --from=kuberlr /bin/kuberlr /bin/kuberlr
+RUN ln -s /bin/kuberlr /bin/kubectl
 COPY --from=build /usr/bin/kubectl* /usr/bin/
-COPY --from=build /usr/etc/kuberlr.conf /usr/etc/kuberlr.conf
 
 USER kuberlr
 ENTRYPOINT ["/bin/kubectl"]
