@@ -48,4 +48,4 @@ jobs:
           TAG="${TAG}-s390x" TARGET_PLATFORMS=linux/s390x make image-push
         env:
           TAG: ${{ github.ref_name }}
-          REPO: ${{ env.IMAGE_REPO }}
+          REPO: "mallardduck"
