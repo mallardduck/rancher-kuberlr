@@ -56,4 +56,4 @@ COPY --from=build /usr/etc/kuberlr.conf /usr/etc/kuberlr.conf
 
 USER kuberlr
 ENTRYPOINT ["/bin/kubectl"]
-CMD ["version"]
+CMD ["help"]
