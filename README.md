@@ -48,15 +48,12 @@ gantt
     axisFormat %S
     tickInterval 1second
     section Rancher
-        2.7.X           :23,27
         2.8.X           :25,28
         2.9.X           :27,30
     section kuberlr image
-        1.Y.Z           :25,28
-        2.Y.Z           :27,30
+        1.Y.Z (for Rancher 2.7)   :25,28
+        2.Y.Z (for Rancher 2.8)   :27,30
     section Kubectl
-        1.23              :22,24
-        1.24              :23,25
         1.25              :24,26
         1.26              :25,27
         1.27              :26,28
