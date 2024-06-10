@@ -15,7 +15,7 @@ RUN ln -s /bin/kuberlr /bin/kubectl
 
 FROM scratch
 COPY --from=build /bin/kubectl /bin/kuberlr
-RUN ln -s /bin/kuberlr /bin/kubectl
+COPY --from=build /bin/kubectl /bin/kubectl
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/group /etc/group
 USER kuberlr
