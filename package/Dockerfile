@@ -70,5 +70,6 @@ RUN ln -s /bin/kuberlr /bin/kubectl
 COPY --from=build /usr/bin/kubectl* /usr/bin/
 
 USER kuberlr
+WORKDIR /home/kuberlr
 ENTRYPOINT ["/bin/kubectl"]
 CMD ["help"]
