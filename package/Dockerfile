@@ -1,5 +1,7 @@
+ARG BCI_VERSION=15.5
+FROM registry.suse.com/bci/bci-busybox:${BCI_VERSION} as final
 FROM --platform=$TARGETPLATFORM mallardduck/rancher-kuberlr:base-v0.4.5 as kuberlr
-FROM --platform=$BUILDPLATFORM registry.suse.com/bci/bci-base:15.5 AS build
+FROM --platform=$BUILDPLATFORM registry.suse.com/bci/bci-base:${BCI_VERSION} AS build
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -40,31 +42,47 @@ RUN set -fx; versions=($KUBECTL_VERSION_INFO); \
         echo "${KUBE_SUM} ${kubectl_target}" | sha256sum -c -; \
     done
 
-FROM registry.suse.com/bci/bci-base:15.5 as final
-RUN zypper -n update && \
-    zypper -n install bash-completion gzip jq tar unzip vim wget && \
-    zypper clean -a && rm -rf /tmp/* /var/tmp/* /usr/share/doc/packages/* /usr/share/doc/manual/* /var/log/*
-RUN echo 'kuberlr:x:1000:1000:kuberlr,,,:/home/kuberlr:/bin/bash' > /etc/passwd && \
-    echo 'kuberlr:x:1000:' > /etc/group && \
-    mkdir /home/kuberlr && \
-    echo '. /etc/profile.d/bash_completion.sh' >> /home/kuberlr/.bashrc && \
-    echo 'alias k="kubectl"' >> /home/kuberlr/.bashrc && \
-    echo 'alias ks="kubectl -n kube-system"' >> /home/kuberlr/.bashrc && \
-    echo 'source <(kuberlr completion bash)' >> /home/kuberlr/.bashrc && \
-    echo 'source <(kubectl completion bash)' >> /home/kuberlr/.bashrc && \
-    echo 'complete -o default -F __start_kubectl k' >> /home/kuberlr/.bashrc && \
-    echo 'LANG=en_US.UTF-8' >> /home/kuberlr/.bashrc && \
-    echo 'PS1="> "' >> /home/kuberlr/.bashrc && \
-    mkdir /home/kuberlr/.kube && \
-    mkdir /home/kuberlr/.kuberlr && \
-    touch /home/kuberlr/.kuberlr/kuberlr.conf && \
-    echo "AllowDownload = false" >> /home/kuberlr/.kuberlr/kuberlr.conf && \
-    echo 'SystemPath = "/usr/bin"' >> /home/kuberlr/.kuberlr/kuberlr.conf && \
-    echo "Timeout = 6" >> /home/kuberlr/.kuberlr/kuberlr.conf && \
-    chown -R kuberlr /home/kuberlr && \
-    chmod 700 /run
+FROM registry.suse.com/bci/bci-base:${BCI_VERSION} as zypper
+# Creates the based dir for the target image, and hydrades it with the
+# original contents of the final image.
+RUN mkdir /chroot
+COPY --from=final / /chroot/
 
 
+# The final image does not contain zypper, --installroot is used to
+# install all artefacts within a dir (/chroot) that can then be copied
+# over to a scratch image.
+RUN zypper --non-interactive refresh && \
+    zypper --installroot /chroot -n rm busybox-vi busybox-links && \
+    zypper --installroot /chroot -n in bash-completion jq vim curl && \
+    zypper --installroot /chroot clean -a && \
+    rm -rf /chroot/var/cache/zypp/* /chroot/var/log/zypp/* /chroot/etc/zypp/
+
+
+RUN echo 'kuberlr:x:1000:1000:kuberlr,,,:/home/kuberlr:/bin/bash' > /chroot/etc/passwd && \
+    echo 'kuberlr:x:1000:' > /chroot/etc/group && \
+    mkdir /chroot/home/kuberlr && \
+    echo '. /etc/profile.d/bash_completion.sh' >> /chroot/home/kuberlr/.bashrc && \
+    echo 'alias k="kubectl"' >> /chroot/home/kuberlr/.bashrc && \
+    echo 'alias ks="kubectl -n kube-system"' >> /chroot/home/kuberlr/.bashrc && \
+    echo 'source <(kuberlr completion bash)' >> /chroot/home/kuberlr/.bashrc && \
+    echo 'source <(kubectl completion bash)' >> /chroot/home/kuberlr/.bashrc && \
+    echo 'complete -o default -F __start_kubectl k' >> /chroot/home/kuberlr/.bashrc && \
+    echo 'LANG=en_US.UTF-8' >> /chroot/home/kuberlr/.bashrc && \
+    echo 'PS1="> "' >> /chroot/home/kuberlr/.bashrc && \
+    mkdir /chroot/home/kuberlr/.kube && \
+    mkdir /chroot/home/kuberlr/.kuberlr && \
+    touch /chroot/home/kuberlr/.kuberlr/kuberlr.conf && \
+    echo "AllowDownload = false" >> /chroot/home/kuberlr/.kuberlr/kuberlr.conf && \
+    echo 'SystemPath = "/usr/bin"' >> /chroot/home/kuberlr/.kuberlr/kuberlr.conf && \
+    echo "Timeout = 6" >> /chroot/home/kuberlr/.kuberlr/kuberlr.conf && \
+    chown -R 1000:1000 /chroot/home/kuberlr && \
+    chmod 700 /chroot/run
+
+
+FROM scratch
+
+COPY --from=zypper /chroot /
 COPY --from=kuberlr /bin/kuberlr /bin/kuberlr
 RUN ln -s /bin/kuberlr /bin/kubectl
 COPY --from=build /usr/bin/kubectl* /usr/bin/
