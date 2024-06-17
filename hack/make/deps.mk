@@ -8,12 +8,12 @@ KUBECTL26_SUM_arm64 ?= $(shell curl -L "https://dl.k8s.io/release/$(KUBECTL26_VE
 KUBECTL26_SUM_amd64 ?= $(shell curl -L "https://dl.k8s.io/release/$(KUBECTL26_VERSION)/bin/linux/amd64/kubectl.sha256")
 KUBECTL26_SUM_s390x ?= $(shell curl -L "https://dl.k8s.io/release/$(KUBECTL26_VERSION)/bin/linux/s390x/kubectl.sha256")
 
-KUBECTL27_VERSION := v1.27.13
+KUBECTL27_VERSION := v1.27.15
 KUBECTL27_SUM_arm64 ?= $(shell curl -L "https://dl.k8s.io/release/$(KUBECTL27_VERSION)/bin/linux/arm64/kubectl.sha256")
 KUBECTL27_SUM_amd64 ?= $(shell curl -L "https://dl.k8s.io/release/$(KUBECTL27_VERSION)/bin/linux/amd64/kubectl.sha256")
 KUBECTL27_SUM_s390x ?= $(shell curl -L "https://dl.k8s.io/release/$(KUBECTL27_VERSION)/bin/linux/s390x/kubectl.sha256")
 
-KUBECTL28_VERSION := v1.28.9
+KUBECTL28_VERSION := v1.28.11
 KUBECTL28_SUM_arm64 ?= $(shell curl -L "https://dl.k8s.io/release/$(KUBECTL28_VERSION)/bin/linux/arm64/kubectl.sha256")
 KUBECTL28_SUM_amd64 ?= $(shell curl -L "https://dl.k8s.io/release/$(KUBECTL28_VERSION)/bin/linux/amd64/kubectl.sha256")
 KUBECTL28_SUM_s390x ?= $(shell curl -L "https://dl.k8s.io/release/$(KUBECTL28_VERSION)/bin/linux/s390x/kubectl.sha256")
