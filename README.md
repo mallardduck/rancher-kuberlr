@@ -37,22 +37,6 @@ And once ready to release new RCs can be created that will ship the new kuberlr.
 ```mermaid
 
 gantt
-    title rancher-kuberlr image
-    todayMarker off
-    dateFormat X
-    axisFormat %S
-    tickInterval 1second
-    section rancher-kuberlr image
-        1.Y.Z           :25,28
-        2.Y.Z           :27,30
-```
-
-Note: Over-time, as new `kuberlr` binaries are released we can introduce a new base image based on that.  
-Then we can still subsequently bump the Y or Z of that "rancher kuberlr" release to update all supported Rancher releases.
-
-```mermaid
-
-gantt
     title `rancher/rancher` and `rancher-kuberlr`
     todayMarker off
     dateFormat X
@@ -72,3 +56,6 @@ gantt
         1.29              :28,30
         1.30              :29,31
 ```
+
+Note: Over-time, as new `kuberlr` binaries are released we can introduce a new base image based on that.  
+Then we can still subsequently bump the Y or Z of that "rancher kuberlr" release to update all supported Rancher releases.
