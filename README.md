@@ -26,19 +26,25 @@ This repo produces:
 
 ### Compatability
 
+Each "kuberlr base image" will be essentially universially compatible like kuberlr is.
+However they were match each `kuberlr` release and subsequently `rancher-kuberlr` will be based on those.
+
+So when a new `kuberlr` releases our automation will add the tag to the versions file via PR.
+Then upon merge another workflow will build and release new base images tagged matching that new version.
+After which, the `rancher-kuberlr` images will need a PR to update those to use the new `kuberlr`.
+And once ready to release new RCs can be created that will ship the new kuberlr.
+
 ```mermaid
 
 gantt
-    title kuberlr-base image vs kuberlr iamge
+    title rancher-kuberlr image
     todayMarker off
     dateFormat X
     axisFormat %S
     tickInterval 1second
-    section kuberlr image
+    section rancher-kuberlr image
         1.Y.Z           :25,28
         2.Y.Z           :27,30
-    section kuberlr-base image
-        base-v0.4.5     :25,30
 ```
 
 Note: Over-time, as new `kuberlr` binaries are released we can introduce a new base image based on that.  
