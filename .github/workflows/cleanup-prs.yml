@@ -1,4 +1,4 @@
-name: (kuberlr-base) Clean PR Branch
+name: Clean PR Branch
 
 on:
   pull_request:
