@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-VERSIONS_FILE="${1:-versions.txt}"
+VERSIONS_FILE_PATH="${1:-versions.txt}"
 ARCHES="amd64 arm64 s390x"
 
 while IFS= read -r release; do
@@ -10,6 +10,6 @@ while IFS= read -r release; do
       echo "Checking if file exists at ${KUBERLR_URL}"
       curl --retry 10 --retry-connrefused -IL -o /dev/null -sS --fail "${KUBERLR_URL}"
     done
-done < "$VERSIONS_FILE"
+done < "$VERSIONS_FILE_PATH"
 
 echo "All versions exists for ${ARCHES}"
