@@ -17,7 +17,7 @@ jobs:
       - name: Run add-new-kuberlr-versions.sh
         id: run
         run: |
-          bash scripts/add-new-versions.sh package/versions.txt > add-new-versions.output
+          bash scripts/add-new-versions.sh versions.txt > add-new-versions.output
           if grep -q ^Added add-new-versions.output; then
             new_versions=$(grep ^Added add-new-versions.output)
             echo "new_versions=${new_versions}" >> $GITHUB_OUTPUT

@@ -25,9 +25,9 @@ done
 
 if [ "${#ADDED_VERSIONS[@]}" -gt 0 ]; then
   echo "Added [${#ADDED_VERSIONS[@]}] versions: (${ADDED_VERSIONS[*]})"
-  cp "${VERSIONS_FILE_PATH}" ./versions.txt
-  awk NF < ./versions.txt | sort -rV -o "${VERSIONS_FILE_PATH}"
-  rm ./versions.txt
+  cp "${VERSIONS_FILE_PATH}" ./versions-temp.txt
+  awk NF < ./versions-temp.txt | sort -rV -o "${VERSIONS_FILE_PATH}"
+  rm ./versions-temp.txt
 else
   echo "No new versions added"
 fi
