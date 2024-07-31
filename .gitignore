@@ -5,5 +5,4 @@
 /dist
 *.swp
 .idea
-/versions.txt
 /new-versions.txt
