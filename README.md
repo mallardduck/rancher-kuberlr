@@ -26,3 +26,4 @@ And once ready to release new RCs can be created which will ship the new `kuberl
 3. Find and replace `rancher-kuberlr` to `rancher/kuberlr`,
 4. Update workflows to use EIO provided secrets
 5. Add renovate (maybe it'll help catch docker tags used to build)
+6. Review CIs and ensure all images and releases are published,
